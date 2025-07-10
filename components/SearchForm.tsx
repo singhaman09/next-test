@@ -3,14 +3,12 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 const schema = z.object({
   q: z.string().min(3, "Enter a country name"),
 });
 
 export default function SearchForm({ defaultValue = "" }: { defaultValue?: string }) {
   const router = useRouter();
-
   const {
     register,
     handleSubmit,
