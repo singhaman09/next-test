@@ -1,6 +1,7 @@
-export default async function CountryDetail({ params }: { params: { name: string } }) {
-  const res = await fetch(`https://restcountries.com/v3.1/name/${params.name}`, {
-    cache: "no-store",
+export default async function CountryDetail({ params }: { params: Promise<{ name: string }> }) {
+  const { name } = await params; // Await params
+  const res = await fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(name)}`, {
+    next: { revalidate: 3600 },
   });
 
   if (!res.ok) throw new Error("Country not found");

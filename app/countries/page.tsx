@@ -35,9 +35,10 @@ async function getCountries(search: string = ""): Promise<Country[]> {
 export default async function CountriesPage({
   searchParams,
 }: {
-  searchParams?: { q?: string };
+  searchParams?: Promise<{ q?: string }>;
 }) {
-  const search = searchParams?.q || "";
+  const params = await searchParams; // Await searchParams
+  const search = params?.q ?? "";
   const countries = await getCountries(search);
 
   return (

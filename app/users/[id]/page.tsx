@@ -1,6 +1,57 @@
-export default async function UserDetail({ params }: any) {
-  const res = await fetch(`https://jsonplaceholder.typicode.com/users/${params.id}`);
-  const user = await res.json();
+"use client";
+
+import { useEffect, useState } from "react";
+
+export type Props = {
+  params: {
+    id: string;
+  };
+};
+
+type User = {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  phone?: string;
+  website?: string;
+  company?: { name: string };
+};
+
+export default function UserDetail({ params }: Props) {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const userId = encodeURIComponent(params.id); // Sanitizing the input
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}`);
+        if (!res.ok) {
+          throw new Error("Failed to fetch user");
+        }
+        const data = await res.json();
+        setUser(data);
+      } catch (err: any) {
+        setError(err.message || "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
+
+  if (loading) {
+    return <div className="min-h-screen bg-gray-100 p-6 text-center">Loading...</div>;
+  }
+
+  if (error || !user) {
+    return <div className="min-h-screen bg-gray-100 p-6 text-center text-red-500">{error || "User not found"}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
