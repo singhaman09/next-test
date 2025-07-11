@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default async function CountryDetail({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params; // Await params
   const res = await fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(name)}`, {
@@ -14,10 +16,12 @@ export default async function CountryDetail({ params }: { params: Promise<{ name
       <div className="max-w-xl w-full bg-gray-100 p-6 rounded-xl shadow-md space-y-4">
         <h2 className="text-2xl font-bold text-gray-800">{country.name.common}</h2>
 
-        <img
+        <Image
           src={country.flags?.png || ""}
           alt={`Flag of ${country.name.common}`}
-          className="w-40 h-auto rounded border shadow"
+          className=" rounded border shadow"
+          width={70}
+          height={70}
         />
 
         <div className="text-gray-700 text-lg space-y-2">

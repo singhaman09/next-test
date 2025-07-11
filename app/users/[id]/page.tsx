@@ -1,13 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import { use } from "react";
 
 export type Props = {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 };
-
 type User = {
   id: number;
   name: string;
@@ -23,7 +22,8 @@ export default function UserDetail({ params }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const userId = encodeURIComponent(params.id); // Sanitizing the input
+ const { id } = use(params);
+  const userId = encodeURIComponent(id); /// Sanitizing the input
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,8 +35,8 @@ export default function UserDetail({ params }: Props) {
         }
         const data = await res.json();
         setUser(data);
-      } catch (err: any) {
-        setError(err.message || "An error occurred");
+      } catch {
+        setError("An error occurred");
       } finally {
         setLoading(false);
       }
@@ -57,10 +57,12 @@ export default function UserDetail({ params }: Props) {
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md">
         <div className="flex items-center gap-4 mb-4">
-          <img
+          <Image
             src={`https://i.pravatar.cc/150?u=${user.id}`}
             alt={user.name}
-            className="w-16 h-16 rounded-full border-2 border-gray-300"
+            className="rounded-full border-2 border-gray-300"
+            width={70}
+            height={70}
           />
           <div>
             <h2 className="text-2xl font-bold text-gray-800">{user.name}</h2>

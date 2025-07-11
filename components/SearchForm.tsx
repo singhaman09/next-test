@@ -18,7 +18,7 @@ export default function SearchForm({ defaultValue = "" }: { defaultValue?: strin
     defaultValues: { q: defaultValue },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: { q: string }) => {
     router.push(`/countries?q=${data.q}`);
   };
 
